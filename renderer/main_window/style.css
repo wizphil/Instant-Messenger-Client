@@ -1,0 +1,30 @@
+.container {
+  position: relative;
+}
+
+#loading-message {
+    top: 30%;width: 300px;
+    position: absolute;
+}
+
+#fullname-input {
+    width: 300px;
+}
+
+#welcome {
+    top: 15%;
+}
+
+#main {
+    top: 30%;
+    position: absolute;
+}
+
+#disconnected {
+    top: 30%;
+    position: absolute;
+}
+
+#disconnect-reason {
+    color: red;
+}

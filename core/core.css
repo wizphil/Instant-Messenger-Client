@@ -1,0 +1,20 @@
+body {
+  font: Verdana;
+  background-color: #EFEEEA !important;
+}
+
+.jumbotron {
+  background-color: #EFEEEA !important; 
+}
+
+.isHidden {
+  display: none;
+}
+
+.isRed {
+  color: red !important;
+}
+
+.isGreen {
+  color: green !important;
+}

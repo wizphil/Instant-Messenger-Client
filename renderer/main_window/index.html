@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Instant Messenger (Beta)</title>
+    <link rel="stylesheet" href="../../node_modules/spectre.css/dist/spectre.min.css">
+    <link rel="stylesheet" href="../../core/bootstrap.min.css">
+    <link rel="stylesheet" href="../../core/core.css">
+    <link rel="stylesheet" href="./style.css">
+  </head>
+
+  <body>
+
+    <div class="text-center jumbotron jumbotron-fluid">
+
+      <!-- Loading Message -->
+      <div class="container" id="loading">
+        <div class="display-4">Loading...</div>
+      </div>
+
+      <!-- New User Flow -->
+        <div class="container isHidden" id="newUser">
+          <div class="display-4" id="welcome">Welcome!</div>
+          <form>
+            <label for="fullNameInput">This is your first time logging in, let's get you started.</label>
+            <div class="form-group">
+              <input type="fullName" class="form-control" id="fullNameInput" aria-describedby="fullNameHelp" placeholder="Enter your name">
+            </div>
+            <div class="form-group"></div>
+              <input type="extensionName" class="form-control" id="extensionInput" aria-describedby="extensionHelp" placeholder="Enter your extension">
+            </div>
+            <small id="fullNameHelp" class="form-text text-muted">This is what everyone else will see.</small>
+            <button type="button" onclick="createUser()" id="create-user-btn" class="btn btn-secondary disabled">Submit</button>
+            <small id="fullNameMinSizeTip" class="form-text text-muted isRed">Name must be at least 3 characters long.</small>
+            <small id="extensionNumbersOnlyTip" class="form-text text-muted isRed">Extension can only contain numbers.</small>
+          </form>
+        </div>
+        
+        <!-- Main View -->
+        <div class="container isHidden" id="main">
+          <h1 class="" id="main-header">Main screen</h1>
+        </div>
+        
+        <!-- Disconnected View -->
+        <div  class="container isHidden" id="disconnected">
+          <h4>You're currently disconnected</h4>
+          <form>
+            <button type="button" id="reconnect-btn" class="btn btn-primary">Attempt Reconnect</button>
+            <small id="disconnect-reason" class="form-text"></small>
+          </form>
+        </div>
+    </div>
+
+    <script src="./newUser.js"></script>
+  </body>
+
+</html>
