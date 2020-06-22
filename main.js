@@ -35,7 +35,7 @@ let myUserId;
 let sessionId;
 let webSocketClient;
 let myStatus = null;
-
+let inErrorState = false;
 
 async function main() {
 	console.log('Starting application.');
@@ -129,6 +129,10 @@ async function reconnect() {
 }
 
 async function goOnline() {
+	if (inErrorState) {
+		return;
+	}
+
 	// Step 1, make sure we have our user
 	if (self == null) {
 		console.info('Attempted to go online, but self was null. username: \'', realUsername, '\', going offline.');
@@ -279,6 +283,7 @@ function handleError(failedComponent, error, enterErrorState) {
 	// Entering an error state is different than going offline.
 	// We're still offline, but we show the user the error.
 	if (enterErrorState) {
+		inErrorState = true;
 		goOffline(errorMessage);
 		console.error('Received breaking errorMessage: ', errorMessage, ', error: ', error);
 	} else {
@@ -301,13 +306,9 @@ function goOffline(errorMessage) {
 	webSocketClient = null;
 	
 	if (errorMessage) {
-		mainWindow.once('show', () => {
-			mainWindow.webContents.send('error', errorMessage);
-		});
+		mainWindow.webContents.send('error', errorMessage);
 	} else {
-		mainWindow.once('show', () => {
-			mainWindow.webContents.send('offline');
-		});
+		mainWindow.webContents.send('offline');
 	}
 }
 

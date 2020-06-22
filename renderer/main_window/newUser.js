@@ -35,10 +35,11 @@ ipcRenderer.on('newUser', (event, username) => {
   let loading = document.getElementById('loading');
   let newUser = document.getElementById('newUser');
   
+  newUser.classList.remove('isHidden');
+  
   main.classList.add('isHidden');
   disconnected.classList.add('isHidden');
   loading.classList.add('isHidden');
-  newUser.classList.remove('isHidden');
 
   welcome.innerText = "Welcome " + username + "!";
 

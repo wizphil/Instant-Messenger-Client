@@ -21,6 +21,7 @@ ipcRenderer.on('afterLogin', (event, myUserId, users, unreadMessageCounts) => {
   let newUser = document.getElementById('newUser');
   
   main.classList.remove('isHidden');
+  
   disconnected.classList.add('isHidden');
   loading.classList.add('isHidden');
   newUser.classList.add('isHidden');
