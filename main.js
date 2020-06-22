@@ -12,12 +12,13 @@ const UserService = require('./service/UserService');
 const MessageService = require('./service/MessageService');
 const GroupService = require('./service/GroupService');
 
+const WebSocket = require('ws');
+
 // TODO don't hardcode the serviceHostPort
 const serviceHostPort = 'localhost:8080';
 const service = axios.create({
 	baseURL: 'http://' + serviceHostPort + '/v1'
 });
-
 const os = require('os');
 
 // when we display the username (done in new user flow), we don't include the domain (it's extra info the user doesn't really need)
@@ -30,7 +31,7 @@ let mainWindow;
 let users;
 let unreadMessageCounts;
 let self;
-let userId;
+let myUserId;
 let sessionId;
 let webSocketClient;
 let myStatus = null;
@@ -108,13 +109,13 @@ async function getMyUser() {
 		console.log('Attempting login as: ', realUsername);
 		self = await UserService.getUserByUsername(service, realUsername);
 		if (self != null) {
-			console.info('User for username: \'', realUsername, '\' found, user: ', self);
-			userId = self.id;
+			console.info('Found user for username: \'', realUsername, '\', self: ', self);
+			myUserId = self.id;
 		} else {
 			console.info('Could not find user for username: \'', realUsername, '\', entering new user flow');
 			mainWindow.once('show', () => {
 				mainWindow.webContents.send('newUser', username);
-			})
+			});
 		}
 	} catch (error) {
 		handleError("Login failed. Failed to connect to server.", error, true);
@@ -124,7 +125,7 @@ async function getMyUser() {
 async function reconnect() {
 	// even if we've already gotten our user before, our settings may have changed, let's get an updated model
 	await getMyUser();
-	//await goOnline();
+	await goOnline();
 }
 
 async function goOnline() {
@@ -145,14 +146,9 @@ async function goOnline() {
 	await getUnreadMessages();
 
 	// Step 5, create the UI with users + unread messages
-
-	// Step 6 (final step), set our status! (aka appear online to all other users)
-	if (myStatus == null) {
-		myStatus = 'Available';
-	}
-
-	setStatus(myStatus);
-	isOnline = true;
+	mainWindow.once('show', () => {
+		mainWindow.webContents.send('afterLogin', myUserId, users, unreadMessageCounts);
+	});
 }
 
 function connectToWebSocket() {
@@ -162,18 +158,23 @@ function connectToWebSocket() {
 		return;
 	}
 	
-	webSocketClient = new WebSocket('ws://' + serviceHostPort + '/session/' + sessionId + '/user/' + self.id);
+	sessionId = null;
+	webSocketClient = new WebSocket('ws://' + serviceHostPort + '/session/user/' + self.id);
 
-	webSocketClient.onclose = function(event) {
-		console.info('WebSocket closed, going offline. Event: ', event);
+	webSocketClient.on('open', function open() {
+		console.log('webSocketClient connected');
+	});
+
+	webSocketClient.on('close', function close() {
+		console.info('WebSocket closed, going offline.');
 		goOffline();
-	};
+	});
 	
-	webSocketClient.onerror = function(event) {
-		console.warn('WebSocket error, entering error state. Event: ', event);
+	webSocketClient.on('error', function error(error) {
+		console.warn('WebSocket error, entering error state. Error: ', error);
 		let errorMessage = 'Connection error. Is the server down? Are you offline? \n';
 		goOffline(errorMessage);
-	};
+	});
 
 	// when we receive a message from the server it's always in the form of MessageCategory and content
 	/// content depents on the message category
@@ -190,49 +191,56 @@ function connectToWebSocket() {
 	//// DisableUser("deluser"),
     //// EstablisedSession("newsession"),
     //// CloseSession("delsession");
-	webSocketClient.onmessage = function(event) {
-		var message = JSON.parse(event.data);
+	webSocketClient.on('message', function incoming(data) {
+		console.log('websocket message received data: ', data);
+		var message = JSON.parse(data);
 		var category = message.category;
 		var content = JSON.parse(message.content);
-		console.debug('websocket received message, category: ', category);
+		console.debug('websocket received message, category: ', category, ', content: \'',content,'\'');
 		
 		switch (category) {
-			case 'dm':
+			case 'DirectMessage':
 				break;
-			case 'ping':
+			case 'UserTypingPing':
 				break;
-			case 'gping':
+			case 'GroupTypingPing':
 				break;
-			case 'newgroup':
+			case 'NewGroup':
 				break;
-			case 'addgusers':
+			case 'UsersAddedToGroup':
 				break;
-			case 'rmguser':
+			case 'UserRemovedFromGroup':
 				break;
-			case 'newuser':
+			case 'NewUser':
 				break;
-			case 'udetails':
+			case 'UpdateUserDetails':
 				break;
-			case 'ustatus':
+			case 'UpdateUserStatus':
 				break;
-			case 'deluser':
+			case 'DisableUser':
 				break;
-			case 'newsession':
+			case 'EstablisedSession':
 				sessionId = content;
+				if (myStatus == null) {
+					myStatus = 'Available';
+				}
+			
+				setStatus(myStatus);
+				isOnline = true;
 				break;
-			case 'delsession':
+			case 'CloseSession':
 				goOffline();
 				break;
 			default:
 				console.warn('websocket received message of unknown category: ', category);
 				break;
 		}
-	};
+	});
 }
 
 async function getAllUsers() {
 	try {
-		let getAllUsersResponse = await UserService.getAllUserInfo(service);
+		users = await UserService.getAllUserInfo(service);
 	} catch (error) {
 		handleError("Login failed (Failed to fetch users).", error, true);
 	}
@@ -240,7 +248,7 @@ async function getAllUsers() {
 
 async function getUnreadMessages() {
 	try {
-		let getUnreadMessageCountsResponse = await MessageService.getUnreadMessageCounts(self.id);
+		unreadMessageCounts = await MessageService.getUnreadMessageCounts(service, self.id);
 	} catch (error) {
 		// go offline
 		handleError("Failed to get unread messages.", error, false);
@@ -249,7 +257,7 @@ async function getUnreadMessages() {
 }
 
 function setStatus(status) {
-	UserService.setStatus(service, userId, sessionId,status);
+	UserService.setStatus(service, myUserId, sessionId, status);
 }
 
 function handleError(failedComponent, error, enterErrorState) {
@@ -295,11 +303,11 @@ function goOffline(errorMessage) {
 	if (errorMessage) {
 		mainWindow.once('show', () => {
 			mainWindow.webContents.send('error', errorMessage);
-		})
+		});
 	} else {
 		mainWindow.once('show', () => {
 			mainWindow.webContents.send('offline');
-		})
+		});
 	}
 }
 

@@ -1,20 +1,5 @@
 'use strict'
 
-function createUser() {
-  let fullName = document.getElementById('fullNameInput').value;
-  let extension = document.getElementById('extensionInput').value;
-
-  if(fullName.length < 3 || fullName.length > 30 || !/^\d+$/.test(extension)) {
-    alert("Full Name must be between 3 and 30 characters. Extension must be empty or only numbers.");
-    return;
-  }
-
-  let userDetails = {'fullname': fullName, 'extension': extension};
-
-  console.log('Create User clicked with userDetails: ', userDetails);
-  ipcRenderer.send('create-user', userDetails);
-}
-
 // delete todo by its text value ( used below in event listener)
 // const deleteTodo = (e) => {
 //   ipcRenderer.send('delete-todo', e.target.textContent)
@@ -26,8 +11,8 @@ function createUser() {
 // })
 
 // on receive new-account flow
-ipcRenderer.on('newUser', (event, username) => {
-  console.log('newUser received, username: ', username);
+ipcRenderer.on('afterLogin', (event, myUserId, users, unreadMessageCounts) => {
+  console.log('afterLogin received, myUserId: ', myUserId, ', users: ', users, ', unreadMessageCounts: ', unreadMessageCounts);
 
   // get the todoList ul
   let main = document.getElementById('main');
@@ -35,12 +20,12 @@ ipcRenderer.on('newUser', (event, username) => {
   let loading = document.getElementById('loading');
   let newUser = document.getElementById('newUser');
   
-  main.classList.add('isHidden');
+  main.classList.remove('isHidden');
   disconnected.classList.add('isHidden');
   loading.classList.add('isHidden');
-  newUser.classList.remove('isHidden');
+  newUser.classList.add('isHidden');
 
-  welcome.innerText = "Welcome " + username + "!";
+  ipcRenderer.send('new-login-completed');
 
   // create html string
 //   const todoItems = todos.reduce((html, todo) => {

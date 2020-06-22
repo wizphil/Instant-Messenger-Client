@@ -1,11 +1,11 @@
 
 module.exports = {
-	getUserByUsername: async function (service, username) {
-		return await this.userGETRequest(service, '/username/' + username);
+	getUserByUsername: async function(service, username) {
+		return await this.userGETRequest(service, 'username/' + username);
 	},
 
-	getAllUserInfo: async function (service) {
-		return await this.userGETRequest(service, '/info/');
+	getAllUserInfo: async function(service) {
+		return await this.userGETRequest(service, 'info/');
 	},
 
 	createUser: async function(service, userDetails) {
@@ -18,12 +18,14 @@ module.exports = {
 
 	userGETRequest: async function (service, request) {
 		request = encodeURI(request);
-		await service.get('/user' + request)
+		let responseData = await service.get('/user/' + request)
 			.then(function (response) {
 				// handle success
 				if (response.data == null || response.data == '') {
+					console.log('succeeded user GET request: ', request, ', no response.data');
 					return null;
 				} else {
+					console.log('succeeded user GET request: ', request, ', response.data: ', response.data);
 					return response.data;
 				}
 			})
@@ -32,11 +34,13 @@ module.exports = {
 				console.error('failed user GET request: ', request, ', error: ', error);
 				throw error;
 			});
+
+		return responseData;
 	},
 
 	userPUTRequest: function (service, request, body) {
 		request = encodeURI(request);
-		service.put('/user' + request, body)
+		let responseData = service.put('/user/' + request, body)
 			.then(function (response) {
 				// handle success
 				if (response.data == null || response.data == '') {
@@ -49,11 +53,13 @@ module.exports = {
 				// handle error
 				console.warn('failed user PUT request: ', request, ', body: ', body, ' error: ', error);
 			});
+
+		return responseData;
 	},
 
 	userPOSTRequest: async function (service, request, body) {
 		request = encodeURI(request);
-		await service.post('/user' + request, body)
+		let responseData = await service.post('/user/' + request, body)
 			.then(function (response) {
 				// handle success
 				if (response.data == null || response.data == '') {
@@ -67,5 +73,7 @@ module.exports = {
 				console.error('failed user POST request: ', request, ', body: ', body, ' error: ', error);
 				throw error;
 			});
+
+		return responseData;
 	}
 }

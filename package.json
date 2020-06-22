@@ -24,6 +24,7 @@
     "electron": "^8.2.3",
     "electron-store": "^2.0.0",
     "spectre.css": "^0.5.3",
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "ws": "^7.3.0"
   }
 }
