@@ -7,12 +7,13 @@
     <link rel="stylesheet" href="../../node_modules/spectre.css/dist/spectre.min.css">
     <link rel="stylesheet" href="../../core/bootstrap.min.css">
     <link rel="stylesheet" href="../../core/core.css">
+    <link rel="stylesheet" href="./mainView.css">
     <link rel="stylesheet" href="./style.css">
   </head>
 
   <body>
 
-    <div class="text-center jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid">
 
       <!-- Loading Message -->
       <div class="container" id="loading">
@@ -20,7 +21,7 @@
       </div>
 
       <!-- New User Flow -->
-        <div class="container isHidden" id="newUser">
+        <div class="text-center container isHidden" id="newUser">
           <div class="display-4" id="welcome">Welcome!</div>
           <form>
             <label for="fullNameInput">This is your first time logging in, let's get you started.</label>
@@ -38,8 +39,23 @@
         </div>
         
         <!-- Main View -->
-        <div class="container isHidden" id="main">
-          <h1 class="" id="main-header">Main screen</h1>
+        <div class="container isHidden" id="mainView">
+          <section>
+            <div id="header">
+              <div id="header-left">
+                HEADER-LEFT
+              </div>
+              <div id="header-right">
+                HEADER-RIGHT
+              </div>
+            </div>
+            <div id="sidebar">
+                SIDEBAR
+            </div>
+            <div id="main">
+                MAIN
+            </div>
+          </section>
         </div>
         
         <!-- Disconnected View -->

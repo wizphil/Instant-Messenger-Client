@@ -30,7 +30,7 @@ ipcRenderer.on('newUser', (event, username) => {
   console.log('newUser received, username: ', username);
 
   // get the todoList ul
-  let main = document.getElementById('main');
+  let main = document.getElementById('mainView');
   let disconnected = document.getElementById('disconnected');
   let loading = document.getElementById('loading');
   let newUser = document.getElementById('newUser');

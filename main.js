@@ -99,7 +99,9 @@ async function main() {
 		//mainWindow.send('todos', updatedTodos)
 	});
 
-	reconnect();
+	mainWindow.once('ready-to-show', () => {
+		reconnect();
+	});
 }
 
 async function getMyUser() {
@@ -113,9 +115,7 @@ async function getMyUser() {
 			myUserId = self.id;
 		} else {
 			console.info('Could not find user for username: \'', realUsername, '\', entering new user flow');
-			mainWindow.once('show', () => {
-				mainWindow.webContents.send('newUser', username);
-			});
+			mainWindow.webContents.send('newUser', username);
 		}
 	} catch (error) {
 		handleError("Login failed. Failed to connect to server.", error, true);
@@ -125,7 +125,9 @@ async function getMyUser() {
 async function reconnect() {
 	// even if we've already gotten our user before, our settings may have changed, let's get an updated model
 	await getMyUser();
-	await goOnline();
+	if (self) {
+		await goOnline();
+	}
 }
 
 async function goOnline() {
@@ -150,9 +152,7 @@ async function goOnline() {
 	await getUnreadMessages();
 
 	// Step 5, create the UI with users + unread messages
-	mainWindow.once('show', () => {
-		mainWindow.webContents.send('afterLogin', myUserId, users, unreadMessageCounts);
-	});
+	mainWindow.webContents.send('afterLogin', myUserId, users, unreadMessageCounts);
 }
 
 function connectToWebSocket() {
@@ -274,7 +274,7 @@ function handleError(failedComponent, error, enterErrorState) {
 	  // The request was made but no response was received
 	  // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
 	  // http.ClientRequest in node.js
-	  errorMessage += 'The request was made but no response was received. Is the server down? Are you offline?';
+	  errorMessage += 'The request was made but no response was received. \nIs the server down? Are you offline?';
 	} else {
 	  // Something happened in setting up the request that triggered an Error
 	  errorMessage += 'An unexpected error has occured.\nError message: ' + error.message;

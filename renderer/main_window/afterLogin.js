@@ -15,7 +15,7 @@ ipcRenderer.on('afterLogin', (event, myUserId, users, unreadMessageCounts) => {
   console.log('afterLogin received, myUserId: ', myUserId, ', users: ', users, ', unreadMessageCounts: ', unreadMessageCounts);
 
   // get the todoList ul
-  let main = document.getElementById('main');
+  let main = document.getElementById('mainView');
   let disconnected = document.getElementById('disconnected');
   let loading = document.getElementById('loading');
   let newUser = document.getElementById('newUser');
