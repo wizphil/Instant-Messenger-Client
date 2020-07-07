@@ -1,0 +1,45 @@
+section {
+	display: flex;
+	flex-flow: column;
+	height: 100vh;
+}
+
+#main {
+	position: absolute;
+	left: 178px;
+	top: 92px;
+	right: 0;
+	bottom: 0;
+}
+
+#header {
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 92px;
+}
+
+#header-left {
+	position: relative;
+	border-style: solid;
+	left: 0;
+	bottom: 0;
+	width: 178px;
+	display: inline-block;
+}
+
+#header-right {
+	position: relative;
+	border-style: solid;
+	right: 0;
+	bottom: 0;
+	display: inline-block;
+}
+
+#sidebar {
+	position: absolute;
+	left: 0;
+	top: 92px;
+	bottom: 0;
+	width: 178px;
+}
