@@ -1,21 +1,21 @@
 body {
-  font: Verdana;
-  background-color: #EFEEEA !important;
-  margin: 0;
+	font: Verdana;
+	background-color: #EFEEEA !important;
+	margin: 0;
 }
 
 .jumbotron {
-  background-color: #EFEEEA !important; 
+	background-color: #EFEEEA !important;
 }
 
 .isHidden {
-  display: none;
+	display: none;
 }
 
 .isRed {
-  color: red !important;
+	color: red !important;
 }
 
 .isGreen {
-  color: green !important;
+	color: green !important;
 }

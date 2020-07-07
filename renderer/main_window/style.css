@@ -1,25 +1,26 @@
 .container {
-  position: relative;
+	/* position: relative; */
 }
 
 #loading-message {
-    top: 30%;width: 300px;
-    position: absolute;
+	top: 30%;
+	width: 300px;
+	/* position: absolute; */
 }
 
 #fullname-input {
-    width: 300px;
+	width: 300px;
 }
 
 #welcome {
-    top: 15%;
+	top: 15%;
 }
 
 #disconnected {
-    top: 30%;
-    position: absolute;
+	top: 30%;
+	/* position: absolute; */
 }
 
 #disconnect-reason {
-    color: red;
+	color: red;
 }

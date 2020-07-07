@@ -13,15 +13,14 @@
 
   <body>
 
-    <div class="jumbotron jumbotron-fluid">
 
       <!-- Loading Message -->
-      <div class="container" id="loading">
+      <div class="jumbotron jumbotron-fluid text-center container" id="loading">
         <div class="display-4">Loading...</div>
       </div>
 
       <!-- New User Flow -->
-        <div class="text-center container isHidden" id="newUser">
+        <div class="jumbotron jumbotron-fluid text-center container isHidden" id="newUser">
           <div class="display-4" id="welcome">Welcome!</div>
           <form>
             <label for="fullNameInput">This is your first time logging in, let's get you started.</label>
@@ -39,27 +38,25 @@
         </div>
         
         <!-- Main View -->
-        <div class="container isHidden" id="mainView">
-          <section>
-            <div id="header">
-              <div id="header-left">
-                HEADER-LEFT
-              </div>
-              <div id="header-right">
-                HEADER-RIGHT
-              </div>
+        <section class="isHidden" id="mainView">
+          <div id="header">
+            <div id="header-left">
+              HEADER-LEFT
             </div>
-            <div id="sidebar">
-                SIDEBAR
+            <div id="header-right">
+              HEADER-RIGHT
             </div>
-            <div id="main">
-                MAIN
-            </div>
-          </section>
-        </div>
+          </div>
+          <div id="sidebar">
+              SIDEBAR
+          </div>
+          <div id="main">
+              MAIN
+          </div>
+        </section>
         
         <!-- Disconnected View -->
-        <div  class="container isHidden" id="disconnected">
+        <div class="jumbotron jumbotron-fluid text-center container isHidden" id="disconnected">
           <h4>You're currently disconnected</h4>
           <form>
             <button type="button" id="reconnect-btn" class="btn btn-primary">Attempt Reconnect</button>
