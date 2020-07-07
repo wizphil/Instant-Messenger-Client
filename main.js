@@ -39,20 +39,20 @@ let inErrorState = false;
 
 async function main() {
 	console.log('Starting application.');
-	
+
 	mainWindow = new Window({
 		file: path.join('renderer', 'main_window', 'index.html')
 	})
 
 	// create's new user
-	ipcMain.on('create-user', (event, userDetails) => {
+	ipcMain.on('create-user', async (event, userDetails) => {
 		userDetails.username = realUsername;
 		userDetails.enabled = true;
 		try {
-			let createUserResponse = UserService.createUser(service, userDetails);
+			let createUserResponse = await UserService.createUser(service, userDetails);
 			console.info('New user created! createUserResponse: ', createUserResponse);
 
-			self = createUserResponse.data;
+			self = createUserResponse;
 			goOnline();
 		} catch (error) {
 			handleError("Failed to create new user.", error, true);
