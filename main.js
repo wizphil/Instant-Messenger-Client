@@ -57,9 +57,6 @@ async function main() {
 		} catch (error) {
 			handleError("Failed to create new user.", error, true);
 		}
-		//const updatedTodos = todosData.deleteTodo(todo).todos
-
-		//mainWindow.send('todos', updatedTodos)
 	});
 
 	mainWindow.once('ready-to-show', () => {
