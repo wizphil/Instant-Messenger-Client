@@ -39,47 +39,10 @@ let inErrorState = false;
 
 async function main() {
 	console.log('Starting application.');
-	// todo list window
+	
 	mainWindow = new Window({
 		file: path.join('renderer', 'main_window', 'index.html')
 	})
-
-	// add todo window
-	// let addTodoWin
-
-	// // TODO: put these events into their own file
-
-	// // initialize with todos
-	// mainWindow.once('show', () => {
-	// 	mainWindow.webContents.send('todos', todosData.todos)
-	// })
-
-	// // create add todo window
-	// ipcMain.on('add-todo-window', () => {
-	// 	// if addTodoWin does not already exist
-	// 	if (!addTodoWin) {
-	// 		// create a new add todo window
-	// 		addTodoWin = new Window({
-	// 			file: path.join('renderer', 'add_item', 'add.html'),
-	// 			width: 400,
-	// 			height: 400,
-	// 			// close with the main window
-	// 			parent: mainWindow
-	// 		})
-
-	// 		// cleanup
-	// 		addTodoWin.on('closed', () => {
-	// 			addTodoWin = null
-	// 		})
-	// 	}
-	// })
-
-	// // add-todo from add todo window
-	// ipcMain.on('add-todo', (event, todo) => {
-	// 	const updatedTodos = todosData.addTodo(todo).todos
-
-	// 	mainWindow.send('todos', updatedTodos)
-	// })
 
 	// create's new user
 	ipcMain.on('create-user', (event, userDetails) => {
